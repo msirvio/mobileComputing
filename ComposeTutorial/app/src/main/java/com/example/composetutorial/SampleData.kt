@@ -35,8 +35,8 @@ object SampleData {
         Message(
             "Miro",
             """This message has multiple rows.
-                | This is the second row!
-                | And here is the third one!""".trimMargin().trim()
+            | This is the second row!
+            | And here is the third one!""".trimMargin().trim()
         ),
         Message(
             "Miro",

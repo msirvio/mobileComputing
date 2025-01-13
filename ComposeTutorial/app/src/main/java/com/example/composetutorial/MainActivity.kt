@@ -4,7 +4,6 @@ import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
@@ -13,7 +12,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -22,7 +20,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,6 +30,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.composetutorial.ui.theme.ComposeTutorialTheme
@@ -53,6 +52,7 @@ data class Message(val author: String, val body: String)
 @Composable
 fun MessageCard(msg: Message) {
     Row(modifier = Modifier.padding(all = 8.dp)) {
+        //Profile picture
         Image(
             painter = painterResource(R.drawable.hampster2),
             contentDescription = "Contact profile picture",
@@ -73,8 +73,9 @@ fun MessageCard(msg: Message) {
                 MaterialTheme.colorScheme.surface
             }
         )
-
+        //Name and text bubble
         Column(modifier = Modifier.clickable { isExpanded = !isExpanded }) {
+            //Name
             Text(
                 text = msg.author,
                 color = MaterialTheme.colorScheme.secondary,
@@ -82,6 +83,7 @@ fun MessageCard(msg: Message) {
             )
             Spacer(modifier = Modifier.height(4.dp))
 
+            //Text bubble
             Surface(
                 shape = MaterialTheme.shapes.medium,
                 shadowElevation = 1.dp,
@@ -109,11 +111,13 @@ fun Conversation(messages: List<Message>) {
 }
 
 @Preview(name = "Light Mode")
+
 @Preview(
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     showBackground = true,
     name = "Dark Mode"
 )
+
 @Composable
 fun PreviewMessageCard() {
     ComposeTutorialTheme {
