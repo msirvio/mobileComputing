@@ -25,13 +25,14 @@ data class Message(val author: String, val body: String)
 
 const val CONVERSATION: String = "CONVERSATION"
 const val INFO: String = "INFO"
+const val SETTINGS: String = "SETTINGS"
 
 @Composable
 fun NavigationManager() {
     val navController = rememberNavController()
     val conversationScreen = ConversationScreen()
     val infoScreen  = InfoScreen()
-
+    val settingsScreen = SettingsScreen()
 
     NavHost(
         navController = navController,
@@ -39,14 +40,28 @@ fun NavigationManager() {
     ) {
         composable(CONVERSATION) {
             conversationScreen.Conversation(
-                SampleData.conversationSample,
+                messages = SampleData.conversationSample,
                 navigateToInfo = {
                     navController.navigate(route = INFO)
+                },
+                navigateToSettings = {
+                    navController.navigate(route = SETTINGS)
                 }
             )
         }
         composable(INFO) {
             infoScreen.Info(
+                navigateToConversation = {
+                    navController.navigate(route = CONVERSATION) {
+                        popUpTo(route = CONVERSATION) {
+                            inclusive = true
+                        }
+                    }
+                }
+            )
+        }
+        composable(SETTINGS) {
+            settingsScreen.Settings(
                 navigateToConversation = {
                     navController.navigate(route = CONVERSATION) {
                         popUpTo(route = CONVERSATION) {

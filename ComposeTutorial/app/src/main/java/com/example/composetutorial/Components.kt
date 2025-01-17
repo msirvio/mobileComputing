@@ -24,19 +24,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil3.compose.rememberAsyncImagePainter
 import com.example.composetutorial.ui.theme.ComposeTutorialTheme
 
 class Components {
-
     @Composable
     fun MessageCard(msg: Message) {
         Row(modifier = Modifier.padding(all = 8.dp)) {
             //Profile picture
             Image(
-                painter = painterResource(R.drawable.hampster2),
+                painter = rememberAsyncImagePainter(DataSaving.getImageUri()),
                 contentDescription = "Contact profile picture",
                 modifier = Modifier
                     .size(40.dp)
@@ -59,7 +58,7 @@ class Components {
             Column(modifier = Modifier.clickable { isExpanded = !isExpanded }) {
                 //Name
                 Text(
-                    text = msg.author,
+                    text = DataSaving.getName(),
                     color = MaterialTheme.colorScheme.secondary,
                     style = MaterialTheme.typography.titleSmall
                 )
