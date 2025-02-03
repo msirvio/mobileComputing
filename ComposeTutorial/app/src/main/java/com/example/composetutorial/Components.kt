@@ -3,7 +3,6 @@ package com.example.composetutorial
 import android.content.res.Configuration
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -24,9 +23,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil3.compose.rememberAsyncImagePainter
+import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.example.composetutorial.ui.theme.ComposeTutorialTheme
 
 class Components {
@@ -34,9 +36,12 @@ class Components {
     fun MessageCard(msg: Message) {
         Row(modifier = Modifier.padding(all = 8.dp)) {
             //Profile picture
-            Image(
-                painter = rememberAsyncImagePainter(DataSaving.getImageUri()),
-                contentDescription = "Contact profile picture",
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(DataSaving.getImageUri(LocalContext.current))
+                    .crossfade(true)
+                    .build(),
+                contentDescription = "Profile picture",
                 modifier = Modifier
                     .size(40.dp)
                     .clip(CircleShape)
@@ -58,7 +63,7 @@ class Components {
             Column(modifier = Modifier.clickable { isExpanded = !isExpanded }) {
                 //Name
                 Text(
-                    text = DataSaving.getName(),
+                    text = DataSaving.getName(LocalContext.current),
                     color = MaterialTheme.colorScheme.secondary,
                     style = MaterialTheme.typography.titleSmall
                 )

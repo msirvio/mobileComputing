@@ -44,12 +44,19 @@ class SettingsScreen {
     @Composable
     fun Settings(
         navigateToConversation: () -> Unit) {
-        val updatedName = DataSaving.getName()
-        val updatedImageUri = DataSaving.getImageUri()
+
+        val context = LocalContext.current
+        // Get updated data
+        val updatedName = DataSaving.getName(context)
+        val updatedImageUri = DataSaving.getImageUri(context)
+
+        // Remember variables
         var imageUri by remember { mutableStateOf(updatedImageUri) }
         var text by remember { mutableStateOf(updatedName) }
-        DataSaving.saveName(text)
-        DataSaving.saveImageUri(imageUri)
+
+        //Save the updated data
+        DataSaving.saveName(text, context)
+        DataSaving.saveImageUri(imageUri, context)
 
         val pickMedia = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             if (uri != null) {
@@ -60,7 +67,7 @@ class SettingsScreen {
         Scaffold (
             topBar = {
                 // The top bar
-                TopAppBar(
+                TopAppBar (
                     // Top bar name and settings icon
                     title = {
                         Row {
@@ -106,8 +113,8 @@ class SettingsScreen {
                     Spacer(modifier = Modifier.width(16.dp))
                     //Profile picture
                     AsyncImage(
-                        model = ImageRequest.Builder(LocalContext.current)
-                            .data(DataSaving.getImageUri())
+                        model = ImageRequest.Builder(context)
+                            .data(imageUri)
                             .crossfade(true)
                             .build(),
                         contentDescription = "Profile picture",
@@ -124,9 +131,11 @@ class SettingsScreen {
                         //Launch photo picker
                         pickMedia.launch(
                             PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-                    }) {
+                    }
+                    ) {
                         Text(text = "Pick photo")
                     }
+
                 }
                 Spacer(modifier = Modifier.height(16.dp))
 

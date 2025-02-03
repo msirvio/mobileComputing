@@ -39,5 +39,22 @@ Because of this, using the back button exits the app.
 I also reformatted the app into multiple classes to make it more manageable for the next homeworks.
 
 ## HW3 Description:
+I implemented the image picking using Photo Picker. To make the Photo picker work, it had to be registered first.
+When the 'Pick photo' -button is pressed, the Photo picker is launched, to choose an image.
+
+The text input was implemented using 'TextField'. I used a version of it called 'OutlinedTextField', to make it look better.
+The text could be updated through the 'onValueChange' -parameter of 'TextField'.
+
+The current imageUri and text are remembered using 'remember' and 'mutableStateOf' -functions. 
+
+I made a "DataSaving" -object, with functions that can be called from anywhere. 
+There are functions to save and get the name and imageUri.
+Everytime this data is needed, it is fetched using the get functions 
+and when the data is changed in the settings menu, the data is saved using the save functions.
+I simply save and get the name and the imageUri using SharedPreferences.
+
+Note - After restarting the app, the imageUri does not work properly, the text does work.
+File, input and output streams would have been a better way to save the image, but I did not get it to work properly either. 
+
 
 ## HW4 Description:

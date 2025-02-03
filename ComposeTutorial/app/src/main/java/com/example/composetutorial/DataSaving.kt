@@ -2,43 +2,43 @@ package com.example.composetutorial
 
 import android.content.Context
 import android.net.Uri
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 
 object DataSaving {
 
-    @Composable
-    fun saveName(name: String) {
-        val sharedPref = LocalContext.current.getSharedPreferences(
-            LocalContext.current.getString(R.string.profileName),
+    // Saves the user name with SharedPreferences
+    fun saveName(name: String, context: Context) {
+        val sharedPref = context.getSharedPreferences(
+            context.getString(R.string.profileName),
             Context.MODE_PRIVATE)
         val editor = sharedPref.edit()
         editor.putString("name", name)
         editor.apply()
     }
 
-    @Composable
-    fun getName(): String {
-        val sharedPref = LocalContext.current.getSharedPreferences(
-            LocalContext.current.getString(R.string.profileName),
+    // Gets the user name with SharedPreferences
+    fun getName(context: Context): String {
+        val sharedPref = context.getSharedPreferences(
+            context.getString(R.string.profileName),
             Context.MODE_PRIVATE)
         return sharedPref.getString("name", "Miro").toString()
     }
 
-    @Composable
-    fun saveImageUri(imageUri: Uri) {
-        val sharedPref = LocalContext.current.getSharedPreferences(
-            LocalContext.current.getString(R.string.imageUri),
+    // Saves the imageUri with SharedPreferences
+    fun saveImageUri(imageUri: Uri, context: Context) {
+
+        val sharedPref = context.getSharedPreferences(
+            context.getString(R.string.imageUri),
             Context.MODE_PRIVATE)
         val editor = sharedPref.edit()
         editor.putString("imageUri", imageUri.toString())
         editor.apply()
     }
 
-    @Composable
-    fun getImageUri(): Uri {
-        val sharedPref = LocalContext.current.getSharedPreferences(
-            LocalContext.current.getString(R.string.imageUri),
+    // Gets the imageUri with SharedPreferences - Does not work properly after restarting the app.
+    fun getImageUri(context: Context): Uri {
+
+        val sharedPref = context.getSharedPreferences(
+            context.getString(R.string.imageUri),
             Context.MODE_PRIVATE)
         val imageUriString = sharedPref.getString("imageUri", Uri.EMPTY.toString())
         return Uri.parse(imageUriString)
