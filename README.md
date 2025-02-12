@@ -58,3 +58,32 @@ File, input and output streams would have been a better way to save the image, b
 
 
 ## HW4 Description:
+I prompt for notification and location permissions when the application is started, 
+if the permissions have not been given yet. 
+I used 'ContextCompat.checkSelfPermission' and 'ActivityCompat.requestPermissions' for this.
+
+The notification can be interacted with by tapping it, to open the app. 
+I created an 'Intent' to be set in the notification when building it, to make it interactable.
+
+I used both, an API and a sensor, to get some data.
+
+I got slippery warning info from here: 
+https://data.ouka.fi/data/fi/dataset/jalankulkijoiden-liukastumisvaroitukset-oulussa
+with the help of this documentation:
+https://sva-konsultointi.github.io/liukastumisvaroitus-api-doc/#introduction
+
+I used 'LocationServices' to get the location, and 'Geocoder' to extract the city name from the location.
+I constructed a URL with the correct city name to get the information from the previously mentioned API.
+With the URL, I got the city's slippery warnings in a descending order (from newest to oldest), and I chose the newest one to be displayed.
+
+I used the temperature sensor to trigger a notification, when the temperature went below 0 °C.
+In the notification, I showed the current temperature in celsius and in fahrenheit.
+To read the sensor, 
+I had to register a 'SensorEventListener' to the temperature sensor with the help of 'SensorManager'.
+Now, when the temperature goes low enough, a notification is triggered.
+
+I used the Extended Controls to change the location and temperature.
+At around 0:20 in the recording, I changed the location from Oulu to Helsinki.
+At around 0:55 in the recording, I lowered the temperature to below 0 °C.
+
+Note! - I did not implement triggering the notification, whilst the app is not in the foreground.

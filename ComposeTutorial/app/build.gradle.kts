@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.composetutorial"
-        minSdk = 24
+        minSdk = 34
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -50,7 +50,9 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
+    implementation("androidx.core:core-ktx:1.15.0")
     implementation("io.coil-kt.coil3:coil-compose:3.0.4")
+    implementation("com.google.android.gms:play-services-location:21.3.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

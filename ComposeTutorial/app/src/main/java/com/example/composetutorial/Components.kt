@@ -88,6 +88,29 @@ class Components {
             }
         }
     }
+
+    @Composable
+    fun SlipperyWarning(warning: SlipWarning) {
+        Row(modifier = Modifier.padding(all = 8.dp)) {
+            Surface(shape = MaterialTheme.shapes.medium,
+                    shadowElevation = 1.dp,
+                    color = MaterialTheme.colorScheme.surface,
+                    modifier = Modifier
+                    .animateContentSize()
+                    .padding(1.dp)
+            ){
+                Column {
+                    Text(text = warning.city,
+                        style = MaterialTheme.typography.labelLarge,
+                        modifier = Modifier.padding(all = 8.dp))
+                    Text(text = warning.timeStamp,
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(all = 8.dp))
+                }
+            }
+        }
+    }
+
     @Preview(name = "Light Mode")
     @Preview(
         uiMode = Configuration.UI_MODE_NIGHT_YES,
