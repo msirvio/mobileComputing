@@ -5,7 +5,6 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
@@ -18,19 +17,20 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.composetutorial.ui.theme.ComposeTutorialTheme
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Intent
-import android.content.pm.ServiceInfo
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.util.Log
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.core.app.ServiceCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import androidx.activity.ComponentActivity
+
 
 data class Message(val author: String, val body: String)
 data class SlipWarning(val city: String, val timeStamp: String)
@@ -48,6 +48,7 @@ private lateinit var sensorEventListener: SensorEventListener
 private var temperature = mutableFloatStateOf(20.0f)
 
 class MainActivity : ComponentActivity() {
+    @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -160,7 +161,7 @@ fun NavigationManager() {
     ) {
         composable(CONVERSATION) {
             conversationScreen.Conversation(
-                messages = SampleData.conversationSample,
+                messages = DataSaving.getList(context),
                 navigateToInfo = {
                     navController.navigate(route = INFO)
                 },

@@ -4,6 +4,43 @@ import android.content.Context
 import android.net.Uri
 
 object DataSaving {
+/*
+    // Saves the user name with SharedPreferences
+    fun saveList(list: String, context: Context) {
+        val sharedPref = context.getSharedPreferences(
+            context.getString(R.string.theList),
+            Context.MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        editor.putString("list", list)
+        editor.apply()
+    }
+
+    // Gets the user name with SharedPreferences
+    fun getList(context: Context): String {
+        val sharedPref = context.getSharedPreferences(
+            context.getString(R.string.theList),
+            Context.MODE_PRIVATE)
+        return sharedPref.getString("list", "[]").toString()
+    }*/
+
+    // Saves the list with SharedPreferences
+    fun saveList(list: MutableList<String>, context: Context) {
+        val listString = list.joinToString("#")
+        val sharedPref = context.getSharedPreferences(
+            context.getString(R.string.listOfItems),
+            Context.MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        editor.putString("list", listString)
+        editor.apply()
+    }
+
+    // Gets the list with SharedPreferences
+    fun getList(context: Context): MutableList<String> {
+        val sharedPref = context.getSharedPreferences(
+            context.getString(R.string.listOfItems),
+            Context.MODE_PRIVATE)
+        return sharedPref.getString("list", "").toString().split("#").toMutableList()
+    }
 
     // Saves the user name with SharedPreferences
     fun saveName(name: String, context: Context) {

@@ -2,4 +2,7 @@
     <string name="app_name">ComposeTutorial</string>
     <string name="profileName" />
     <string name="imageUri" />
+    <string name="theList" />
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="listOfItems" />
 </resources>

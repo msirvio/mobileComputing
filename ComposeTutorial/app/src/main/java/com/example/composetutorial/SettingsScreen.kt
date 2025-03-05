@@ -44,10 +44,10 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.example.composetutorial.ui.theme.ComposeTutorialTheme
 import android.Manifest
-import android.app.Activity
 import android.app.PendingIntent
 import android.content.Intent
-import androidx.core.app.ActivityCompat
+import androidx.compose.material3.ButtonColors
+import androidx.compose.ui.res.colorResource
 
 class SettingsScreen {
     @Composable
@@ -139,7 +139,11 @@ class SettingsScreen {
                         //Launch photo picker
                         pickMedia.launch(
                             PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-                    }
+                    },
+                        colors = ButtonColors(containerColor = colorResource(R.color.blue),
+                            contentColor = colorResource(R.color.white),
+                            disabledContentColor = colorResource(R.color.white),
+                            disabledContainerColor = colorResource(R.color.blue))
                     ) {
                         Text(text = "Pick photo")
                     }
@@ -193,7 +197,11 @@ class SettingsScreen {
                             == PackageManager.PERMISSION_GRANTED) {
                             notificationManager.notify(1, builder.build())
                         }
-                    }
+                    },
+                        colors = ButtonColors(containerColor = colorResource(R.color.blue),
+                            contentColor = colorResource(R.color.white),
+                            disabledContentColor = colorResource(R.color.white),
+                            disabledContainerColor = colorResource(R.color.blue))
                     ) {
                         Text(text = "Send a Test Notification")
                     }

@@ -1,6 +1,9 @@
 package com.example.composetutorial
 
+import android.app.AlertDialog
+import android.content.Context
 import android.content.res.Configuration
+import android.widget.EditText
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.border
@@ -13,6 +16,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -21,9 +26,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
@@ -32,6 +40,122 @@ import coil3.request.crossfade
 import com.example.composetutorial.ui.theme.ComposeTutorialTheme
 
 class Components {
+
+    @Composable
+    fun ShopCard(name: String, branch: String, time: String, street: String, number: String, postCode: String) {
+        Row {
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Surface(
+                shape = MaterialTheme.shapes.medium,
+                shadowElevation = 1.dp,
+                modifier = Modifier
+                    .padding(8.dp)
+            ) {
+                Column {
+                    Text(
+                        text = name + " " + branch,
+                        modifier = Modifier.padding(all = 8.dp),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Text(
+                        text = time,
+                        modifier = Modifier.padding(all = 8.dp),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Text(
+                        text = street + " " + number + ", " + postCode,
+                        modifier = Modifier.padding(all = 8.dp),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+    }
+    @Composable
+    fun ListItem(item: String) {
+        if(item != "" && item != "#") {
+            val context = LocalContext.current
+
+            Row(verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(all = 8.dp)) {
+                Column {
+                    Surface(
+                        shape = MaterialTheme.shapes.medium,
+                        shadowElevation = 1.dp,
+                        modifier = Modifier
+                            .padding(1.dp)
+                    ) {
+                        Text(
+                            text = item,
+                            modifier = Modifier.padding(all = 8.dp),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                }
+                IconButton(onClick = {
+                    //ADD ITEM
+                    val itemList = DataSaving.getList(context = context)
+                    itemList.remove(item)
+                    DataSaving.saveList(list = itemList, context = context)
+                }) {
+                    Icon(
+                        imageVector = ImageVector.vectorResource(R.drawable.baseline_remove_24),
+                        contentDescription = "Remove button"
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    fun AddItem() {
+        val context = LocalContext.current
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = "Add item",
+                modifier = Modifier.padding(all = 8.dp),
+                style = MaterialTheme.typography.bodyMedium
+            )
+            IconButton(onClick = {
+
+                alertDialogPopUp(context)
+
+            }) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.baseline_add_24),
+                    contentDescription = "Add button"
+                )
+            }
+        }
+    }
+
+    private fun alertDialogPopUp(context: Context) {
+        val editText = EditText(context)
+        val alertDialog = AlertDialog.Builder(context)
+            .setTitle("Input text: ")
+            .setView(editText)
+            .setPositiveButton("Add") { dialogInterface, _ ->
+                val input = editText.text.toString()
+
+                //ADD ITEM
+                if (input != "") {
+                    val itemList = DataSaving.getList(context = context)
+                    itemList.add(input)
+                    DataSaving.saveList(list = itemList, context = context)
+                }
+
+                dialogInterface.dismiss()
+            }
+            .setNegativeButton("Cancel") { dialogInterface, _ ->
+                dialogInterface.dismiss()
+            }
+        alertDialog.show()
+    }
+
     @Composable
     fun MessageCard(msg: Message) {
         Row(modifier = Modifier.padding(all = 8.dp)) {
@@ -121,8 +245,13 @@ class Components {
     fun PreviewMessageCard() {
         ComposeTutorialTheme {
             Surface {
-                MessageCard(
-                    msg = Message("Miro", "This is a message.")
+                ShopCard(
+                    name = "Lidl",
+                    branch = "Tuira",
+                    time = "Ma-Pe 8-21",
+                    street = "Esimerkkikatu",
+                    number = "22",
+                    postCode = "90570"
                 )
             }
         }

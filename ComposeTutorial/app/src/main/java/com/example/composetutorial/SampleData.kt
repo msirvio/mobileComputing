@@ -1,9 +1,32 @@
+import android.util.Log
 import com.example.composetutorial.Message
 
 /**
  * SampleData for Jetpack Compose Tutorial 
  */
 object SampleData {
+    val items = mutableListOf(
+        "test1",
+        "test2",
+        "test3"
+    )
+
+    fun addToItems(item: String) {
+        items.add(item)
+    }
+
+    fun removeFromItems(item: String) {
+        items.remove(item)
+    }
+
+    fun testToString() {
+        var itemString = items.joinToString("#")
+        Log.d("TEST", itemString)
+        val itemsTest = itemString.split("#").toMutableList()
+        itemString = itemsTest.joinToString("#")
+        Log.d("TEST", itemString)
+    }
+
     // Sample conversation data
     val conversationSample = listOf(
         Message(

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<objectAnimator xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="1000">
+
+    <propertyValuesHolder
+        android:propertyName="translateX"
+        android:valueType="floatType"
+        android:valueFrom="-100"
+        android:valueTo="7.04"
+        />
+
+
+</objectAnimator>

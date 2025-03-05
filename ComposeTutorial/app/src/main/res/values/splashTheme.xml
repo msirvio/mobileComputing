@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.App.Splash" parent="Theme.ComposeTutorial">
+        <item name="android:windowSplashScreenBackground">@color/blue</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/animatedlogo</item>
+        <item name="android:windowSplashScreenAnimationDuration">2000</item>
+        <item name="postSplashScreenTheme">@style/Theme.ComposeTutorial</item>
+    </style>
+</resources>
