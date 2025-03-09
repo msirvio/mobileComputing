@@ -51,7 +51,8 @@ import androidx.compose.ui.res.colorResource
 
 class SettingsScreen {
     @Composable
-    fun Settings(navigateToConversation: () -> Unit) {
+    fun Settings(navigateToConversation: () -> Unit,
+                 recomposer: () -> Unit) {
 
         val context = LocalContext.current
         // Get updated data
@@ -214,7 +215,7 @@ class SettingsScreen {
     @Composable
     fun PreviewSettings() {
         ComposeTutorialTheme {
-            Settings(navigateToConversation = {})
+            Settings(navigateToConversation = {}, recomposer = {})
         }
     }
 }

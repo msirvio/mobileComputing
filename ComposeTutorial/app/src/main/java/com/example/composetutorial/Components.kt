@@ -11,6 +11,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -48,7 +49,7 @@ class Components {
 
             Surface(
                 shape = MaterialTheme.shapes.medium,
-                shadowElevation = 1.dp,
+                shadowElevation = 4.dp,
                 modifier = Modifier
                     .padding(8.dp)
             ) {
@@ -75,54 +76,62 @@ class Components {
         Spacer(modifier = Modifier.height(8.dp))
     }
     @Composable
-    fun ListItem(item: String) {
+    fun ListItem(item: String, recomposer: () -> Unit) {
         if(item != "" && item != "#") {
             val context = LocalContext.current
 
-            Row(verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(all = 8.dp)) {
-                Column {
-                    Surface(
-                        shape = MaterialTheme.shapes.medium,
-                        shadowElevation = 1.dp,
-                        modifier = Modifier
-                            .padding(1.dp)
-                    ) {
+            Column (modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+            )
+
+            {
+                Surface(
+                    shape = MaterialTheme.shapes.medium,
+                    shadowElevation = 4.dp,
+                    modifier = Modifier
+                        .padding(1.dp)
+                ) {
+                    Row (verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(all = 8.dp)) {
                         Text(
                             text = item,
                             modifier = Modifier.padding(all = 8.dp),
-                            style = MaterialTheme.typography.bodyMedium
+                            style = MaterialTheme.typography.bodyLarge
                         )
+                        IconButton(onClick = {
+                            //REMOVE ITEM
+                            val itemList = DataSaving.getList(context = context)
+                            itemList.remove(item)
+                            DataSaving.saveList(list = itemList, context = context)
+                            recomposer()
+                        }) {
+                            Icon(
+                                imageVector = ImageVector.vectorResource(R.drawable.baseline_remove_24),
+                                contentDescription = "Remove button"
+                            )
+                        }
                     }
-                }
-                IconButton(onClick = {
-                    //ADD ITEM
-                    val itemList = DataSaving.getList(context = context)
-                    itemList.remove(item)
-                    DataSaving.saveList(list = itemList, context = context)
-                }) {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(R.drawable.baseline_remove_24),
-                        contentDescription = "Remove button"
-                    )
                 }
             }
         }
     }
 
     @Composable
-    fun AddItem() {
+    fun AddItem(recomposer: () -> Unit) {
         val context = LocalContext.current
+
 
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = "Add item",
                 modifier = Modifier.padding(all = 8.dp),
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyLarge
             )
             IconButton(onClick = {
 
-                alertDialogPopUp(context)
+                alertDialogPopUp(context, recomposer)
+                recomposer()
 
             }) {
                 Icon(
@@ -133,7 +142,7 @@ class Components {
         }
     }
 
-    private fun alertDialogPopUp(context: Context) {
+    private fun alertDialogPopUp(context: Context, recomposer: () -> Unit) {
         val editText = EditText(context)
         val alertDialog = AlertDialog.Builder(context)
             .setTitle("Input text: ")
@@ -149,9 +158,11 @@ class Components {
                 }
 
                 dialogInterface.dismiss()
+                recomposer()
             }
             .setNegativeButton("Cancel") { dialogInterface, _ ->
                 dialogInterface.dismiss()
+                recomposer()
             }
         alertDialog.show()
     }
@@ -244,7 +255,8 @@ class Components {
     @Composable
     fun PreviewMessageCard() {
         ComposeTutorialTheme {
-            Surface {
+            Column {
+                ListItem("Maito", recomposer = {})
                 ShopCard(
                     name = "Lidl",
                     branch = "Tuira",

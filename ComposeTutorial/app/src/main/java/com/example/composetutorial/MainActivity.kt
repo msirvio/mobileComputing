@@ -30,7 +30,10 @@ import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import androidx.activity.ComponentActivity
-
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 
 data class Message(val author: String, val body: String)
 data class SlipWarning(val city: String, val timeStamp: String)
@@ -123,6 +126,9 @@ fun NavigationManager() {
     val settingsScreen = SettingsScreen()
     val context = LocalContext.current
 
+    var recompose by remember { mutableStateOf(0) }
+    Log.d("ReComposeTest", recompose.toString())
+
     //Temperature sensor
     Log.d("Sensor",
         "Current Temperature: ${temperature.floatValue} °C or ${temperature.floatValue.times(1.8).plus(32)} °F")
@@ -150,8 +156,8 @@ fun NavigationManager() {
 
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
             == PackageManager.PERMISSION_GRANTED) {
-
-            notificationManager.notify(1, notification)
+            //Notification disabled
+            //notificationManager.notify(1, notification)
         }
     }
 
@@ -161,12 +167,17 @@ fun NavigationManager() {
     ) {
         composable(CONVERSATION) {
             conversationScreen.Conversation(
-                messages = DataSaving.getList(context),
+                items = DataSaving.getList(context),
                 navigateToInfo = {
                     navController.navigate(route = INFO)
+                    recompose++
                 },
                 navigateToSettings = {
                     navController.navigate(route = SETTINGS)
+                    recompose++
+                },
+                recomposer = {
+                    recompose++
                 }
             )
         }
@@ -178,6 +189,10 @@ fun NavigationManager() {
                             inclusive = true
                         }
                     }
+                    recompose++
+                },
+                recomposer = {
+                    recompose++
                 }
             )
         }
@@ -189,6 +204,10 @@ fun NavigationManager() {
                             inclusive = true
                         }
                     }
+                    recompose++
+                },
+                recomposer = {
+                    recompose++
                 }
             )
         }

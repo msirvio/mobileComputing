@@ -87,3 +87,32 @@ At around 0:20 in the recording, I changed the location from Oulu to Helsinki.
 At around 0:55 in the recording, I lowered the temperature to below 0 °C.
 
 Note! - I did not implement triggering the notification, whilst the app is not in the foreground.
+
+
+## Project Description:
+Shopping list app.
+
+Implemented main features of the app:
+Add items to the shopping list and remove from it. The list is saved, and returned after restarting the app.
+Getting information (name, opening hours, address) about shops nearby the user's location. 
+Animated splash screen.
+
+I implemented the item adding by showing a 'AlertDialog' pop up window to the user.
+The user can write the name of the item and confirm to add the item.
+Everytime a new item is added to the list, the previous list is fetched, 
+new item is added to it, and the list is saved back using 'SharedPreferences' 
+(just like name and image in previous homework).
+
+To get the information about the shops, I used OpenStreetMap and OverPass API.
+I tried using Maps SDK first, but I had some troubles setting up the API keys.
+Just like in the previous homework, I got the location of the user and used this in the query, 
+to get the nearby shops, with relevant tags. This query returns a JSONArray, 
+from where the shops and the relevant information about them can be extracted. 
+
+The custom animated splash screen required work with xml-files, to set the wanted animation.
+I applied the tips from this tutorial: https://www.youtube.com/watch?v=eFZmMSm1G1c, to create my own animated splash screen.
+
+The fetching of the shop information is a bit slow and unreliable, 
+so I save the latest information in memory 
+to avoid having to wait too long each time for the same info.
+So, the app could be optimised in the future, and some features could be added, like an interactable map to set markers or favorite shops.

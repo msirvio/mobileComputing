@@ -3,6 +3,7 @@
 package com.example.composetutorial
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
@@ -30,7 +31,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
@@ -40,10 +43,8 @@ import com.google.android.gms.tasks.CancellationTokenSource
 import org.json.JSONArray
 import java.net.URL
 import java.util.concurrent.Executors
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import org.json.JSONObject
-import java.net.SocketTimeoutException
+import java.io.FileNotFoundException
 
 class InfoScreen {
 
@@ -52,67 +53,68 @@ class InfoScreen {
     private var timeStamp = ""
     private var latitude = 0.0
     private var longitude = 0.0
-    private var elements = JSONArray()
+    private var shops = JSONArray()
 
-    private fun getClosestShops(latitude: Double, longitude: Double) {
+    private fun getClosestShops(latitude: Double, longitude: Double, context: Context) : JSONArray {
 
         Log.d("APITest", "$latitude, $longitude")
         Executors.newSingleThreadExecutor().execute({
-            val client = OkHttpClient()
 
             val query = """
-        [out:json];
-        (
-          node["shop"="alcohol"](around:1000, $latitude, $longitude);
-          node["shop"="supermarket"](around:1000, $latitude, $longitude);
-          node["shop"="convenience"](around:1000, $latitude, $longitude);
-          
-        );
-        out body;
-        """
+            [out:json];
+            (
+            node["shop"="alcohol"](around:500, $latitude, $longitude);
+            node["shop"="supermarket"](around:500, $latitude, $longitude);
+            node["shop"="convenience"](around:500, $latitude, $longitude);
+            );
+            out body;
+            """
 
             val url =
                 "https://overpass-api.de/api/interpreter?data=${query.replace("\n", "").trim()}"
 
-            val request = Request.Builder()
-                .url(url)
-                .build()
-
             try {
-                client.newCall(request).execute().use { response ->
-                    val responseData = response.body?.string()
+                val response = URL(url).readText()
+                Log.d("APITest", response)
 
-                    if (!response.isSuccessful) {
-                        return@execute
-                    }
+                val jsonResponse = JSONObject(response)
+                Log.d("APITest", jsonResponse.toString())
 
-                    val jsonResponse = JSONObject(responseData.toString())
-                    elements = jsonResponse.getJSONArray("elements")
-
+                val newShops = jsonResponse.getJSONArray("elements")
+                if (newShops.toString() != "[]") {
+                    DataSaving.saveShops(newShops, context)
+                    shops = newShops
+                    Log.d("APITest", shops.toString())
+                } else {
+                    shops = DataSaving.getShops(context)
+                    Log.d("APITest", "Empty array!")
                 }
-            } catch (e: SocketTimeoutException) {
-                Log.d("APITest", "TimeOut")
+
+                Log.d("APITest", shops.toString())
+            } catch (e: FileNotFoundException) {
+                Log.d("APITest", "Exception caught!")
             }
         })
+        return shops
     }
 
     @Composable
-    fun ShopCards() {
+    fun ShopCards(storeUpdate: JSONArray) {
         val components = Components()
 
-        for (i in 0 until elements.length()) {
+        for (i in 0 until storeUpdate.length()) {
             //Only first five
             if (i >= 5) {
                 break
             }
 
-            val element = elements.getJSONObject(i)
-            val shopName = element.getJSONObject("tags").optString("name", "N/A")
-            val branch = element.getJSONObject("tags").optString("branch", "")
-            val openingHours = element.getJSONObject("tags").optString("opening_hours","N/A")
-            val street = element.getJSONObject("tags").optString("addr:street","N/A")
-            val number = element.getJSONObject("tags").optString("addr:housenumber","N/A")
-            val postCode = element.getJSONObject("tags").optString("addr:postcode","N/A")
+            val shop = storeUpdate.getJSONObject(i)
+            val shopName = shop.getJSONObject("tags").optString("name", "N/A")
+            val branch = shop.getJSONObject("tags").optString("branch", "")
+            val openingHours = shop.getJSONObject("tags").optString("opening_hours","N/A")
+            val street = shop.getJSONObject("tags").optString("addr:street","N/A")
+            val number = shop.getJSONObject("tags").optString("addr:housenumber","N/A")
+            val postCode = shop.getJSONObject("tags").optString("addr:postcode","N/A")
 
             components.ShopCard(
                 name = shopName,
@@ -128,12 +130,16 @@ class InfoScreen {
     }
 
     @Composable
-    fun Info(navigateToConversation: () -> Unit) {
-
-        var time by remember { mutableStateOf(timeStamp) }
+    fun Info(navigateToConversation: () -> Unit,
+             recomposer: () -> Unit) {
 
         val context = LocalContext.current
         val components = Components()
+
+        var time by remember { mutableStateOf(timeStamp) }
+
+        shops = DataSaving.getShops(context)
+        var storeUpdate by remember { mutableStateOf(shops) }
 
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, CancellationTokenSource().token)
@@ -187,6 +193,8 @@ class InfoScreen {
                 }
             })
         }
+        //if (location.latitude != 0.0 && location.longitude != 0.0)
+        storeUpdate = getClosestShops(latitude, longitude, context)
 
         Scaffold (
             topBar = {
@@ -207,6 +215,19 @@ class InfoScreen {
                                 imageVector = Icons.Filled.Info,
                                 contentDescription = "Info page",
                                 modifier = Modifier.size(32.dp)
+                            )
+                        }
+                    },
+                    actions = {
+                        //Info button
+                        IconButton(onClick =
+                        {
+                            storeUpdate = getClosestShops(latitude, longitude, context)
+
+                        }) {
+                            Icon(
+                                imageVector = ImageVector.vectorResource(R.drawable.baseline_refresh_24),
+                                contentDescription = "Refresh"
                             )
                         }
                     },
@@ -236,10 +257,10 @@ class InfoScreen {
                                 text = "Stores nearby:"
                             )
                         }
-
-                        getClosestShops(latitude, longitude)
+                        //getClosestShops(latitude, longitude)
                         //Spacer(modifier = Modifier.width(64.dp))
-                        ShopCards()
+                        Log.d("APITest", "STORES: " + storeUpdate.toString())
+                        ShopCards(storeUpdate)
 
                         Row {
                             Spacer(modifier = Modifier.width(16.dp))
@@ -267,7 +288,7 @@ class InfoScreen {
     @Composable
     fun PreviewInfo() {
         ComposeTutorialTheme {
-            Info(navigateToConversation = {})
+            Info(navigateToConversation = {}, recomposer = {})
         }
     }
 }

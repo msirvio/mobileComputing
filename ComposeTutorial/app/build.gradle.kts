@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.storage.CacheResetOnProcessCanceled.enabled
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -56,8 +58,7 @@ dependencies {
     implementation("com.google.android.gms:play-services-location:21.3.0")
     implementation("androidx.core:core-splashscreen:1.0.0")
     implementation("androidx.appcompat:appcompat:1.4.2")
-    implementation ("androidx.activity:activity-ktx:1.7.0")
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("androidx.activity:activity-ktx:1.7.0")
     implementation(libs.play.services.maps)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)

@@ -5,4 +5,5 @@
     <string name="theList" />
     <string name="title_activity_maps">MapsActivity</string>
     <string name="listOfItems" />
+    <string name="savedShops" />
 </resources>

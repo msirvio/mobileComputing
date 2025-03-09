@@ -2,26 +2,28 @@ package com.example.composetutorial
 
 import android.content.Context
 import android.net.Uri
+import org.json.JSONArray
 
 object DataSaving {
-/*
-    // Saves the user name with SharedPreferences
-    fun saveList(list: String, context: Context) {
+
+    // Saves the shops with SharedPreferences
+    fun saveShops(shops: JSONArray, context: Context) {
+        val shopString = shops.toString()
         val sharedPref = context.getSharedPreferences(
-            context.getString(R.string.theList),
+            context.getString(R.string.savedShops),
             Context.MODE_PRIVATE)
         val editor = sharedPref.edit()
-        editor.putString("list", list)
+        editor.putString("shops", shopString)
         editor.apply()
     }
 
-    // Gets the user name with SharedPreferences
-    fun getList(context: Context): String {
+    // Gets the shops with SharedPreferences
+    fun getShops(context: Context): JSONArray {
         val sharedPref = context.getSharedPreferences(
-            context.getString(R.string.theList),
+            context.getString(R.string.savedShops),
             Context.MODE_PRIVATE)
-        return sharedPref.getString("list", "[]").toString()
-    }*/
+        return JSONArray(sharedPref.getString("shops", "[]").toString())
+    }
 
     // Saves the list with SharedPreferences
     fun saveList(list: MutableList<String>, context: Context) {

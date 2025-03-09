@@ -30,64 +30,66 @@ class ConversationScreen {
 
     @Composable
     fun Conversation(
-        messages: List<String>,
+        items: List<String>,
         navigateToInfo: () -> Unit,
-        navigateToSettings: () -> Unit
+        navigateToSettings: () -> Unit,
+        recomposer: () -> Unit
     ) {
         val components = Components()
 
-            Scaffold(
-                topBar = {
-                    // The top bar
-                    TopAppBar(
-                        title = {
-                            // Name of page
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Icon(
-                                    imageVector = ImageVector.vectorResource(R.drawable.ic_launcher_foreground),
-                                    contentDescription = "Home page",
-                                    modifier = Modifier.scale(0.5f)
-                                )
-                                //Spacer(modifier = Modifier.width(8.dp))
-                                Text("Hey, " + DataSaving.getName(LocalContext.current) + "!")
-                            }
-                        },
-                        actions = {
-                            //Info button
-                            IconButton(onClick = navigateToInfo) {
-                                Icon(
-                                    imageVector = ImageVector.vectorResource(R.drawable.baseline_info_24),
-                                    contentDescription = "Info page",
+        Scaffold(
+            topBar = {
+                // The top bar
+                TopAppBar(
+                    title = {
+                        // Name of page
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = ImageVector.vectorResource(R.drawable.ic_launcher_foreground),
+                                contentDescription = "Home page",
+                                modifier = Modifier.scale(0.5f)
+                            )
+                            //Spacer(modifier = Modifier.width(8.dp))
+                            Text("Hey, " + DataSaving.getName(LocalContext.current) + "!")
+                        }
+                    },
+                    actions = {
+                        //Info button
+                        IconButton(onClick = navigateToInfo) {
+                            Icon(
+                                imageVector = ImageVector.vectorResource(R.drawable.baseline_info_24),
+                                contentDescription = "Info page",
 
-                                    )
-                            }
-                            //Settings button
-                            IconButton(onClick = navigateToSettings) {
-                                Icon(
-                                    imageVector = ImageVector.vectorResource(R.drawable.baseline_settings_24),
-                                    contentDescription = "Settings page"
                                 )
-                            }
-                        },
-                        colors = TopAppBarDefaults.topAppBarColors(colorResource(R.color.blue))
-                    )
-                }
-            ) { innerPadding ->
-                Column {
-                    //The scrollable messages
-                    LazyColumn(
-                        modifier = Modifier.padding(innerPadding)
-                            .fillMaxWidth()
-                    ) {
-                        items(messages) { message ->
-                            components.ListItem(message)
                         }
-                        //Add Item
-                        item {
-                            components.AddItem()
+                        //Settings button
+                        IconButton(onClick = navigateToSettings) {
+                            Icon(
+                                imageVector = ImageVector.vectorResource(R.drawable.baseline_settings_24),
+                                contentDescription = "Settings page"
+                            )
                         }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(colorResource(R.color.blue))
+                )
+            }
+        ) { innerPadding ->
+            Column (modifier = Modifier.fillMaxWidth()) {
+                //The scrollable messages
+                LazyColumn(
+                    modifier = Modifier.padding(innerPadding)
+                        .fillMaxWidth()
+                ) {
+                    //Shopping list items
+                    items(items) { item ->
+                        components.ListItem(item, recomposer)
+                    }
+                    //Add Item button
+                    item {
+                        components.AddItem(recomposer)
                     }
                 }
+            }
         }
     }
 
@@ -95,7 +97,7 @@ class ConversationScreen {
     @Composable
     fun PreviewConversation() {
         ComposeTutorialTheme {
-            Conversation(SampleData.items, navigateToInfo = {}, navigateToSettings = {})
+            Conversation(SampleData.items, navigateToInfo = {}, navigateToSettings = {}, recomposer = {})
         }
     }
 }
